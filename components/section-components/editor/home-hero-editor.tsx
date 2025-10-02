@@ -23,22 +23,10 @@ type HeroFormData = {
   mainTitle: TranslatedText;
   ctaText: TranslatedText;
   ctaUrl: string;
-  backgroundImages: string[];
-  stats: {
-    servedOver: {
-      value: number;
-      title: TranslatedText;
-      desc: TranslatedText;
-    };
-    donate: {
-      title: TranslatedText;
-      desc: TranslatedText;
-    };
-    volunteer: {
-      title: TranslatedText;
-      desc: TranslatedText;
-    };
-  };
+  backgroundImage: string;
+  secondaryTitle: TranslatedText;
+  description: TranslatedText;
+  productImage: string;
 };
 
 interface HomeHeroEditorProps {
@@ -77,76 +65,6 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
     if (!values.mainTitle.mn.trim()) newErrors.titleMn = true;
     if (!values.ctaText.en.trim()) newErrors.subtitleEn = true;
     if (!values.ctaText.mn.trim()) newErrors.subtitleMn = true;
-
-    if (!values.stats.servedOver?.value) {
-      setStatsError({
-        key: 'servedOver.value',
-        value: true,
-      });
-      return;
-    }
-    if (!values.stats.donate?.title.en.trim()) {
-      setStatsError({
-        key: 'donate.titleEn',
-        value: true,
-      });
-      return;
-    }
-    if (!values.stats.donate?.title.mn.trim()) {
-      setStatsError({
-        key: 'donate.titleMn',
-        value: true,
-      });
-      return;
-    }
-
-    if (!values.stats.donate?.desc.en.trim()) {
-      setStatsError({
-        key: 'donate.descEn',
-        value: true,
-      });
-      return;
-    }
-
-    if (!values.stats.donate?.desc.mn.trim()) {
-      setStatsError({
-        key: 'donate.descMn',
-        value: true,
-      });
-      return;
-    }
-
-    if (!values.stats.volunteer?.title.en.trim()) {
-      setStatsError({
-        key: 'volunteer.titleEn',
-        value: true,
-      });
-      return;
-    }
-
-    if (!values.stats.volunteer?.title.mn.trim()) {
-      setStatsError({
-        key: 'volunteer.titleMn',
-        value: true,
-      });
-      return;
-    }
-
-    if (!values.stats.volunteer?.desc.en.trim()) {
-      setStatsError({
-        key: 'volunteer.descEn',
-        value: true,
-      });
-      return;
-    }
-
-    if (!values.stats.volunteer?.desc.mn.trim()) {
-      setStatsError({
-        key: 'volunteer.descMn',
-        value: true,
-      });
-      return;
-    }
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -233,6 +151,24 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
                     <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
                   )}
                 </div>
+                <div>
+                  <Label htmlFor="secondaryTitle" className="text-sm font-medium text-gray-700">
+                    2 дахь гарчиг
+                  </Label>
+                  <Input
+                    id="secondaryTitle"
+                    {...register(`secondaryTitle.${lang}`)}
+                    onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
+                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    placeholder="Гарчиг оруулах"
+                  />
+                  {errors.titleEn && (
+                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
+                  )}
+                  {errors.titleMn && (
+                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
+                  )}
+                </div>
 
                 <div>
                   <Label htmlFor="ctaText" className="text-sm font-medium text-gray-700">
@@ -279,15 +215,17 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
 
             {/* Background Images Section */}
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Зураг</h3>
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                Арын Зураг
+              </h3>
 
               <div className="space-y-3">
                 <ImageUpload
-                  mode="multi"
-                  value={watchedValues.backgroundImages || []}
-                  onChange={value => handleFieldChange('backgroundImages', value)}
+                  mode="single"
+                  value={watchedValues.backgroundImage || ''}
+                  onChange={value => handleFieldChange('backgroundImage', value)}
                   onUpload={handleImageUpload}
-                  maxFiles={10}
+                  maxFiles={1}
                   maxSize={5}
                   acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
                 />
@@ -295,105 +233,25 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
             </div>
 
             <Separator />
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                Бүтээгдэхүүний Зураг
+              </h3>
+
+              <div className="space-y-3">
+                <ImageUpload
+                  mode="single"
+                  value={watchedValues.productImage || ''}
+                  onChange={value => handleFieldChange('productImage', value)}
+                  onUpload={handleImageUpload}
+                  maxFiles={1}
+                  maxSize={5}
+                  acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                />
+              </div>
+            </div>
 
             {/* Statistics Section */}
-            <div className="space-y-4">
-              {/* Served Over */}
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-gray-700">Served Over</h4>
-                <Input
-                  type="number"
-                  {...register('stats.servedOver.value')}
-                  onChange={e =>
-                    handleFieldChange('stats.servedOver.value', parseInt(e.target.value) || 0)
-                  }
-                  className="mt-1"
-                  placeholder="Тоо утга"
-                />
-                {statsError?.key === 'servedOver.value' && (
-                  <p className="text-red-500 text-xs mt-1">Тоо утга заавал бөглөх</p>
-                )}
-                <Input
-                  placeholder="Гарчиг"
-                  {...register(`stats.servedOver.title.${lang}`)}
-                  onChange={e =>
-                    handleFieldChange(`stats.servedOver.title.${lang}`, e.target.value)
-                  }
-                  className="mt-1"
-                />
-                {statsError?.key === 'servedOver.titleEn' && (
-                  <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                )}
-                {statsError?.key === 'servedOver.titleMn' && (
-                  <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                )}
-                <Textarea
-                  placeholder="Тайлбар"
-                  {...register(`stats.servedOver.desc.${lang}`)}
-                  onChange={e => handleFieldChange(`stats.servedOver.desc.${lang}`, e.target.value)}
-                  className="mt-1"
-                  rows={2}
-                />
-                {statsError?.key === 'servedOver.descEn' && (
-                  <p className="text-red-500 text-xs mt-1">Англи хэлний тайлбар заавал бөглөх</p>
-                )}
-                {statsError?.key === 'servedOver.descMn' && (
-                  <p className="text-red-500 text-xs mt-1">Монгол хэлний тайлбар заавал бөглөх</p>
-                )}
-              </div>
-
-              {/* Donate & Volunteer */}
-              {['donate', 'volunteer'].map((key: string) => (
-                <div key={key} className="space-y-3">
-                  <h4 className="text-sm font-medium text-gray-700 capitalize">{key}</h4>
-                  <div>
-                    <Input
-                      placeholder="Гарчиг"
-                      {...register(`stats.${key as 'donate' | 'volunteer'}.title.${lang}`)}
-                      onChange={e =>
-                        handleFieldChange(
-                          `stats.${key as 'donate' | 'volunteer'}.title.${lang}`,
-                          e.target.value
-                        )
-                      }
-                      className="mt-1"
-                    />
-                    {statsError?.key === 'donate.titleEn' && (
-                      <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                    )}
-                    {statsError?.key === 'donate.titleMn' && (
-                      <p className="text-red-500 text-xs mt-1">
-                        Монгол хэлний гарчиг заавал бөглөх
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <Textarea
-                      placeholder="Тайлбар"
-                      {...register(`stats.${key as 'donate' | 'volunteer'}.desc.${lang}`)}
-                      onChange={e =>
-                        handleFieldChange(
-                          `stats.${key as 'donate' | 'volunteer'}.desc.${lang}`,
-                          e.target.value
-                        )
-                      }
-                      className="mt-1"
-                      rows={2}
-                    />
-                    {statsError?.key === `${key as 'donate' | 'volunteer'}.descEn` && (
-                      <p className="text-red-500 text-xs mt-1">
-                        Англи хэлний тайлбар заавал бөглөх
-                      </p>
-                    )}
-                    {statsError?.key === `${key as 'donate' | 'volunteer'}.descMn` && (
-                      <p className="text-red-500 text-xs mt-1">
-                        Монгол хэлний тайлбар заавал бөглөх
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </form>
       </div>

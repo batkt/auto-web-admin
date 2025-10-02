@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Monitor, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Hero from '../home/hero';
+import Hero from '../home/hero-section';
 import { SectionData } from '@/lib/types/section.types';
 import AboutSection from '../home/about-section';
 import HelpSection from '../home/help';
@@ -98,7 +98,14 @@ const SectionViewer = ({
         return <QuoteSection lang={lang} data={section.data} />;
 
       case 'home-blog':
-        return <BlogSection lang={lang} data={section.data} blogList={blogList} />;
+        return (
+          <BlogSection
+            lang={lang}
+            device={_selectedDevice}
+            data={section.data}
+            blogList={blogList}
+          />
+        );
 
       case 'footer':
         return (
