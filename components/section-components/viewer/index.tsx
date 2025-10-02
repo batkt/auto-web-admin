@@ -7,7 +7,7 @@ import { SectionData } from '@/lib/types/section.types';
 import AboutSection from '../home/about-section';
 import HelpSection from '../home/help';
 import Ticker from '../home/ticker';
-import QuoteSection from '../home/quote';
+import QuoteSection from '../home/product-section';
 import BlogSection from '../home/blog-section';
 import HeroSection from '@/components/about/cover-section';
 import SectionOne from '@/components/about/section-one';
@@ -32,16 +32,19 @@ import DonateImpactSection from '@/components/donate/donate-impact-section';
 import DonatePaymentSection from '@/components/donate/donate-payment-section';
 import DonateThankYouSection from '@/components/donate/donate-thank-you-section';
 import DonateTransparency from '@/components/donate/donate-transparency';
+import { Product } from '@/lib/types/product.types';
 
 type DeviceType = 'desktop' | 'mobile';
 
 const SectionViewer = ({
   section,
   blogList,
+  productList,
   footerData,
 }: {
   section: SectionData;
   blogList: Blog[];
+  productList: Product[];
   footerData: any;
 }) => {
   const [selectedDevice, setSelectedDevice] = useState<DeviceType>('desktop');
@@ -85,7 +88,7 @@ const SectionViewer = ({
       case 'home-hero':
         return <Hero lang={lang} device={_selectedDevice} data={section.data} />;
 
-      case 'home-mission':
+      case 'home-stats':
         return <AboutSection lang={lang} device={_selectedDevice} data={section.data} />;
 
       case 'home-help':
@@ -94,8 +97,15 @@ const SectionViewer = ({
       case 'home-gallery':
         return <Ticker lang={lang} data={section.data} />;
 
-      case 'home-quote':
-        return <QuoteSection lang={lang} data={section.data} />;
+      case 'home-products':
+        return (
+          <QuoteSection
+            lang={lang}
+            productList={blogList}
+            device={_selectedDevice}
+            data={section.data}
+          />
+        );
 
       case 'home-blog':
         return (

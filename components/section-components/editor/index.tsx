@@ -51,7 +51,7 @@ const SectionEditor = ({ section, onDataChange, preview }: SectionEditorProps) =
           <HomeHeroEditor data={section.data} onDataChange={onDataChange} sectionId={section._id} />
         );
 
-      case 'home-mission':
+      case 'home-stats':
         return (
           <HomeMissionEditor
             data={section.data}
@@ -80,7 +80,7 @@ const SectionEditor = ({ section, onDataChange, preview }: SectionEditorProps) =
         );
       // return <Ticker lang={lang} data={section.data} />
 
-      case 'home-quote':
+      case 'home-products':
         return (
           <HomeQuoteEditor
             data={section.data as any}

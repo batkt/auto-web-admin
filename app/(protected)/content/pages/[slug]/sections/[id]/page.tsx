@@ -2,7 +2,9 @@ import SectionContent from '@/components/section-components/content';
 import { getBlogList } from '@/lib/services/blog.service';
 import { getSectionByKey } from '@/lib/services/page.service';
 import { Blog } from '@/lib/types/blog.types';
+import { Product } from '@/lib/types/product.types';
 import React from 'react';
+import { getProductList } from '@/lib/services/blog.service';
 
 interface SectionDetailProps {
   params: Promise<{
@@ -16,12 +18,20 @@ const SectionDetail = async (props: SectionDetailProps) => {
   const section = sectionResponse.data;
 
   let list: Blog[] = [];
+  let proList: Product[] = [];
   if (section.key === 'home-blog') {
     const listResponse = await getBlogList({
       limit: 3,
     });
 
     list = listResponse.data.data;
+  }
+  if (section.key === 'home-products') {
+    const proResponse = await getProductList({
+      limit: 6,
+    });
+
+    proList = proResponse.data.data;
   }
 
   let footerData: any = {};
@@ -38,7 +48,12 @@ const SectionDetail = async (props: SectionDetailProps) => {
 
   return (
     <div>
-      <SectionContent section={section} blogList={list} footerData={footerData} />
+      <SectionContent
+        section={section}
+        productList={proList}
+        blogList={list}
+        footerData={footerData}
+      />
     </div>
   );
 };

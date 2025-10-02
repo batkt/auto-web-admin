@@ -6,6 +6,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from '@/components/ui/image-upload';
+import { Separator } from '@/components/ui/separator';
+
+import { uploadFile } from '@/lib/actions/file';
+
 import { updateSectionData } from '@/lib/actions/section';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -18,7 +23,9 @@ type TranslatedText = {
 
 type HomeBlogFormData = {
   title: TranslatedText;
+  secondaryTitle: TranslatedText;
   description: TranslatedText;
+  backgroundImage: string;
 };
 
 interface HomeBlogEditorProps {
@@ -31,6 +38,7 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
   const { register, handleSubmit, watch, setValue } = useForm<HomeBlogFormData>({
     defaultValues: data,
   });
+  const watchedValues = watch();
 
   const [lang, setLang] = useState<'en' | 'mn'>('en');
   const [isSaving, setIsSaving] = useState(false);
@@ -88,6 +96,16 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
   const handleChangeLang = (v: string) => {
     setLang(v as 'en' | 'mn');
   };
+  const handleImageUpload = async (file: File): Promise<string> => {
+    try {
+      const uploadedFile = await uploadFile(file);
+      return uploadedFile.url;
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error('Зураг оруулахад алдаа гарлаа');
+      throw error;
+    }
+  };
 
   return (
     <div className="h-full flex flex-col">
@@ -123,6 +141,25 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
                 </div>
 
                 <div>
+                  <Label htmlFor="title" className="text-sm font-medium text-gray-700">
+                    2-р Гарчиг
+                  </Label>
+                  <Input
+                    id="title"
+                    {...register(`secondaryTitle.${lang}`)}
+                    onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
+                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    placeholder="Гарчиг оруулах"
+                  />
+                  {errors.titleEn && (
+                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
+                  )}
+                  {errors.titleMn && (
+                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
+                  )}
+                </div>
+
+                <div>
                   <Label htmlFor="description" className="text-sm font-medium text-gray-700">
                     Тайлбар
                   </Label>
@@ -143,6 +180,25 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
                   {errors.descriptionMn && (
                     <p className="text-red-500 text-xs mt-1">Монгол хэлний тайлбар заавал бөглөх</p>
                   )}
+                </div>
+
+                <Separator />
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                    Арын зураг
+                  </h3>
+                  <ImageUpload
+                    mode="single"
+                    value={watchedValues.backgroundImage || ''}
+                    onChange={value => handleFieldChange('backgroundImage', value as string)}
+                    onUpload={handleImageUpload}
+                    maxFiles={1}
+                    maxSize={5}
+                    acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                  />
+                  <p className="text-xs text-gray-500">
+                    Нүүрэн дээр харагдах гол зураг. Ил тод фон (PNG) зөвлөмжтэй.
+                  </p>
                 </div>
               </div>
             </div>

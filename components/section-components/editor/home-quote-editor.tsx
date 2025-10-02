@@ -1,16 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2 } from 'lucide-react';
 import { ImageUpload } from '@/components/ui/image-upload';
-import { updateSectionData } from '@/lib/actions/section';
+import { Separator } from '@/components/ui/separator';
+
 import { uploadFile } from '@/lib/actions/file';
+
+import { updateSectionData } from '@/lib/actions/section';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import LanguageTabs from '../language-tabs';
@@ -20,66 +21,43 @@ type TranslatedText = {
   mn: string;
 };
 
-type QuoteItem = {
-  quote: TranslatedText;
-  author: TranslatedText;
-};
-
-type QuoteFormData = {
+type HomeQuoteFormData = {
+  title: TranslatedText;
+  secondaryTitle: TranslatedText;
+  description: TranslatedText;
   backgroundImage: string;
-  items: QuoteItem[];
 };
 
-interface HomeQuoteEditorProps {
-  data: QuoteFormData;
-  onDataChange: (data: QuoteFormData) => void;
+interface HomeBlogEditorProps {
+  data: HomeQuoteFormData;
+  onDataChange: (data: HomeQuoteFormData) => void;
   sectionId?: string;
 }
 
-const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps) => {
-  const { register, handleSubmit, watch, setValue, control } = useForm<QuoteFormData>({
+const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) => {
+  const { register, handleSubmit, watch, setValue } = useForm<HomeQuoteFormData>({
     defaultValues: data,
   });
-  const { fields } = useFieldArray({
-    control,
-    name: 'items',
-  });
+  const watchedValues = watch();
 
   const [lang, setLang] = useState<'en' | 'mn'>('en');
   const [isSaving, setIsSaving] = useState(false);
-  const watchedValues = watch();
   const [errors, setErrors] = useState<{
-    backgroundImage?: boolean;
-  }>({});
-  const [itemErrors, setItemErrors] = useState<{
-    [key: number]: {
-      quoteEn?: boolean;
-      quoteMn?: boolean;
-      authorEn?: boolean;
-      authorMn?: boolean;
-    };
+    titleEn?: boolean;
+    titleMn?: boolean;
+    descriptionEn?: boolean;
+    descriptionMn?: boolean;
   }>({});
 
-  const onSubmit = async (values: QuoteFormData) => {
-    // Validate main fields
+  const onSubmit = async (values: HomeQuoteFormData) => {
     const newErrors: typeof errors = {};
-    if (!values.backgroundImage?.trim()) newErrors.backgroundImage = true;
+    if (!values.title.en.trim()) newErrors.titleEn = true;
+    if (!values.title.mn.trim()) newErrors.titleMn = true;
+    if (!values.description.en.trim()) newErrors.descriptionEn = true;
+    if (!values.description.mn.trim()) newErrors.descriptionMn = true;
+
     setErrors(newErrors);
-
-    // Validate all items
-    const newItemErrors: typeof itemErrors = {};
-    (values.items || []).forEach((item, idx) => {
-      const err: { quoteEn?: boolean; quoteMn?: boolean; authorEn?: boolean; authorMn?: boolean } =
-        {};
-      if (!item.quote.en.trim()) err.quoteEn = true;
-      if (!item.quote.mn.trim()) err.quoteMn = true;
-      if (!item.author.en.trim()) err.authorEn = true;
-      if (!item.author.mn.trim()) err.authorMn = true;
-      if (Object.keys(err).length > 0) newItemErrors[idx] = err;
-    });
-    setItemErrors(newItemErrors);
-
-    if (Object.keys(newErrors).length > 0 || Object.keys(newItemErrors).length > 0) {
+    if (Object.keys(newErrors).length > 0) {
       toast.error('Бүх талбарыг бүрэн бөглөнө үү');
       return;
     }
@@ -118,38 +96,15 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
   const handleChangeLang = (v: string) => {
     setLang(v as 'en' | 'mn');
   };
-
-  // Upload function using the actual API
-  const handleImageUpload = async file => {
+  const handleImageUpload = async (file: File): Promise<string> => {
     try {
-      const response = await uploadFile(file);
-      return response.url;
+      const uploadedFile = await uploadFile(file);
+      return uploadedFile.url;
     } catch (error) {
+      console.error('Error uploading file:', error);
       toast.error('Зураг оруулахад алдаа гарлаа');
       throw error;
     }
-  };
-
-  // Add new quote item
-  const addQuoteItem = () => {
-    const newItem: QuoteItem = {
-      quote: { en: '', mn: '' },
-      author: { en: '', mn: '' },
-    };
-    const currentItems = watchedValues.items || [];
-    const updatedItems = [...currentItems, newItem];
-    setValue('items', updatedItems);
-    const currentValues = watch();
-    onDataChange(currentValues);
-  };
-
-  // Remove quote item
-  const removeQuoteItem = (index: number) => {
-    const currentItems = watchedValues.items || [];
-    const updatedItems = currentItems.filter((_: any, i: number) => i !== index);
-    setValue('items', updatedItems);
-    const currentValues = watch();
-    onDataChange(currentValues);
   };
 
   return (
@@ -163,121 +118,65 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
       <div className="flex-1 overflow-y-auto">
         <form key={lang} onSubmit={handleSubmit(onSubmit)} className="h-full flex flex-col">
           <div className="p-6 space-y-6">
-            {/* Background Image Section */}
+            {/* Main Content Section */}
             <div className="space-y-4">
               <div className="space-y-3">
-                <ImageUpload
-                  mode="single"
-                  value={watchedValues.backgroundImage || ''}
-                  onChange={url => handleFieldChange('backgroundImage', url)}
-                  onUpload={handleImageUpload}
-                  className={cn('mt-1', errors.backgroundImage ? 'border-red-500' : '')}
-                />
+                <div>
+                  <Label htmlFor="title" className="text-sm font-medium text-gray-700">
+                    Гарчиг
+                  </Label>
+                  <Input
+                    id="title"
+                    {...register(`title.${lang}`)}
+                    onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
+                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    placeholder="Гарчиг оруулах"
+                  />
+                  {errors.titleEn && (
+                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
+                  )}
+                  {errors.titleMn && (
+                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
+                  )}
+                </div>
 
-                {errors.backgroundImage && (
-                  <p className="text-xs text-red-500 mt-1">Зураг шаардлагатай</p>
-                )}
-              </div>
-            </div>
+                <div>
+                  <Label htmlFor="title" className="text-sm font-medium text-gray-700">
+                    2-р Гарчиг
+                  </Label>
+                  <Input
+                    id="title"
+                    {...register(`secondaryTitle.${lang}`)}
+                    onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
+                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    placeholder="Гарчиг оруулах"
+                  />
+                  {errors.titleEn && (
+                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
+                  )}
+                  {errors.titleMn && (
+                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
+                  )}
+                </div>
 
-            <Separator />
-
-            {/* Quote Items Section */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
-                  Ишлэл нэмэлт
-                </h3>
-              </div>
-
-              <div className="space-y-4">
-                {fields.map((item: any, index: number) => (
-                  <div key={index} className="border rounded-lg p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-medium text-gray-700">Ишлэл {index + 1}</h4>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => removeQuoteItem(index)}
-                        className="flex items-center gap-1"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                        Устгах
-                      </Button>
-                    </div>
-
-                    <div className="space-y-3">
-                      <div>
-                        <Label
-                          htmlFor={`quote-${index}-${lang}`}
-                          className="text-sm font-medium text-gray-700"
-                        >
-                          Ишлэл
-                        </Label>
-                        <Textarea
-                          id={`quote-${index}-${lang}`}
-                          {...register(`items.${index}.quote.${lang}`)}
-                          onChange={e =>
-                            handleFieldChange(`items.${index}.quote.${lang}`, e.target.value)
-                          }
-                          className={cn(
-                            'mt-1',
-                            itemErrors[index]?.quoteEn || itemErrors[index]?.quoteMn
-                              ? 'border-red-500'
-                              : ''
-                          )}
-                          placeholder="Ишлэл оруулах"
-                          rows={3}
-                        />
-                        {itemErrors[index]?.quoteEn && (
-                          <p className="text-xs text-red-500 mt-1">Англи ишлэл шаардлагатай</p>
-                        )}
-                        {itemErrors[index]?.quoteMn && (
-                          <p className="text-xs text-red-500 mt-1">Монгол ишлэл шаардлагатай</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <Label
-                          htmlFor={`author-${index}-${lang}`}
-                          className="text-sm font-medium text-gray-700"
-                        >
-                          Зохиогч
-                        </Label>
-                        <Input
-                          id={`author-${index}-${lang}`}
-                          {...register(`items.${index}.author.${lang}`)}
-                          onChange={e =>
-                            handleFieldChange(`items.${index}.author.${lang}`, e.target.value)
-                          }
-                          className={cn(
-                            'mt-1',
-                            itemErrors[index]?.authorEn ? 'border-red-500' : ''
-                          )}
-                          placeholder="Зохиогчийн нэр оруулах"
-                        />
-                        {itemErrors[index]?.authorEn && (
-                          <p className="text-xs text-red-500 mt-1">Англи зохиогч шаардлагатай</p>
-                        )}
-                        {itemErrors[index]?.authorMn && (
-                          <p className="text-xs text-red-500 mt-1">Монгол зохиогч шаардлагатай</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex justify-end">
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={addQuoteItem}
-                  className="flex items-center gap-1"
-                >
-                  <Plus className="h-3 w-3" />
-                  Ишлэл нэмэх
-                </Button>
+                <Separator />
+                <div className="space-y-4">
+                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                    Арын зураг
+                  </h3>
+                  <ImageUpload
+                    mode="single"
+                    value={watchedValues.backgroundImage || ''}
+                    onChange={value => handleFieldChange('backgroundImage', value as string)}
+                    onUpload={handleImageUpload}
+                    maxFiles={1}
+                    maxSize={5}
+                    acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                  />
+                  <p className="text-xs text-gray-500">
+                    Нүүрэн дээр харагдах гол зураг. Ил тод фон (PNG) зөвлөмжтэй.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
