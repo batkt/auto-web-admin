@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import Hero from '../home/hero-section';
 import { SectionData } from '@/lib/types/section.types';
 import AboutSection from '../home/about-section';
-import HelpSection from '../home/help';
+import HelpSection from '../home/features-section';
 import Ticker from '../home/ticker';
 import QuoteSection from '../home/product-section';
 import BlogSection from '../home/blog-section';
@@ -36,17 +36,7 @@ import { Product } from '@/lib/types/product.types';
 
 type DeviceType = 'desktop' | 'mobile';
 
-const SectionViewer = ({
-  section,
-  blogList,
-  productList,
-  footerData,
-}: {
-  section: SectionData;
-  blogList: Blog[];
-  productList: Product[];
-  footerData: any;
-}) => {
+const SectionViewer = ({ section, blogList }: { section: SectionData; blogList: Blog[] }) => {
   const [selectedDevice, setSelectedDevice] = useState<DeviceType>('desktop');
   const [viewerWidth, setViewerWidth] = useState<number>(0);
   const viewerRef = useRef<HTMLDivElement>(null);
@@ -91,21 +81,14 @@ const SectionViewer = ({
       case 'home-stats':
         return <AboutSection lang={lang} device={_selectedDevice} data={section.data} />;
 
-      case 'home-help':
+      case 'home-contact':
         return <HelpSection lang={lang} device={_selectedDevice} data={section.data} />;
 
-      case 'home-gallery':
-        return <Ticker lang={lang} data={section.data} />;
+      case 'home-quotes':
+        return <Ticker lang={lang} device={_selectedDevice} data={section.data} />;
 
       case 'home-products':
-        return (
-          <QuoteSection
-            lang={lang}
-            productList={blogList}
-            device={_selectedDevice}
-            data={section.data}
-          />
-        );
+        return <QuoteSection lang={lang} device={_selectedDevice} data={section.data} />;
 
       case 'home-blog':
         return (
@@ -114,16 +97,6 @@ const SectionViewer = ({
             device={_selectedDevice}
             data={section.data}
             blogList={blogList}
-          />
-        );
-
-      case 'footer':
-        return (
-          <Footer
-            lang={lang}
-            device={_selectedDevice}
-            data={section.data}
-            additionalData={footerData}
           />
         );
 

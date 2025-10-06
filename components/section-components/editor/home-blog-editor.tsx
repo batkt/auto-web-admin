@@ -45,6 +45,9 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
   const [errors, setErrors] = useState<{
     titleEn?: boolean;
     titleMn?: boolean;
+    secondaryTitleEn?: boolean;
+    secondaryTitleMn?: boolean;
+
     descriptionEn?: boolean;
     descriptionMn?: boolean;
   }>({});
@@ -53,6 +56,9 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
     const newErrors: typeof errors = {};
     if (!values.title.en.trim()) newErrors.titleEn = true;
     if (!values.title.mn.trim()) newErrors.titleMn = true;
+    if (!values.secondaryTitle.en.trim()) newErrors.secondaryTitleEn = true;
+    if (!values.secondaryTitle.mn.trim()) newErrors.titleMn = true;
+
     if (!values.description.en.trim()) newErrors.descriptionEn = true;
     if (!values.description.mn.trim()) newErrors.descriptionMn = true;
 
@@ -147,8 +153,11 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
                   <Input
                     id="title"
                     {...register(`secondaryTitle.${lang}`)}
-                    onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
+                    className={cn(
+                      'mt-1',
+                      errors.secondaryTitleEn || errors.secondaryTitleEn ? 'border-red-500' : ''
+                    )}
                     placeholder="Гарчиг оруулах"
                   />
                   {errors.titleEn && (

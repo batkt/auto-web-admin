@@ -32,14 +32,9 @@ export const MENU_DATA: MenuItem[] = [
     icon: SquareTerminal,
     items: [
       {
-        title: 'Хуудас',
+        title: 'Хуудас засах',
         url: '/content/pages',
         breadcrumb: ['Контент', 'Хуудас'],
-      },
-      {
-        title: 'Салбарууд',
-        url: '/content/branches',
-        breadcrumb: ['Контент', 'Салбарууд'],
       },
     ],
   },

@@ -38,7 +38,7 @@ const BlogSection = ({
 
   return (
     <motion.section
-      className="relative w-full overflow-hidden bg-[#111]"
+      className="relative w-full overflow-hidden "
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.3 }}
@@ -52,9 +52,8 @@ const BlogSection = ({
             fill
             sizes="100vw"
             priority
-            className="object-cover object-center pointer-events-none select-none opacity-90"
+            className="object-cover object-center pointer-events-none select-none"
           />
-          <div className="absolute inset-0 bg-black/40" />
         </>
       )}
 

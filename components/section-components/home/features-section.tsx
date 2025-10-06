@@ -1,8 +1,23 @@
+// components/FeaturesSection.tsx
 'use client';
 
 import React from 'react';
-import { motion, easeOut } from 'framer-motion';
-import { FaHandHoldingHeart, FaHandshake, FaHeart } from 'react-icons/fa6';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import {
+  FaMapMarkerAlt,
+  FaPhone,
+  FaPaperPlane,
+  FaFacebook,
+  FaLinkedin,
+  FaInstagram,
+  FaPinterest,
+} from 'react-icons/fa';
+import { getClientImageUrl, getImageUrl } from '@/utils';
 
 const FeaturesSection = ({
   device,
@@ -13,143 +28,212 @@ const FeaturesSection = ({
   data: any;
   lang: string;
 }) => {
-  const features = [
-    {
-      key: 1,
-      icon: FaHandHoldingHeart,
-      color: 'text-red-500',
-      bgColor: 'bg-red-500/10',
-    },
-    {
-      key: 3,
-      icon: FaHandshake,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
-    },
-    {
-      key: 6,
-      icon: FaHeart,
-      color: 'text-pink-500',
-      bgColor: 'bg-pink-500/10',
-    },
-  ].map((item, index) => {
-    return {
-      ...item,
-      title: data.items[index].title,
-      description: data.items[index].description,
-    };
-  });
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 50,
-      scale: 0.9,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-        ease: easeOut,
-      },
-    },
-  };
-
-  const headerVariants = {
-    hidden: {
-      opacity: 0,
-      y: -30,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: easeOut,
-      },
-    },
-  };
-
   return (
-    <section className="w-full py-20">
-      <div className="container max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={headerVariants}
-        >
-          <h2 className="text-3xl sm:text-4xl text-center font-medium mb-6 text-white">
-            {data?.title?.[lang]}
+    <section
+      style={{
+        backgroundImage: `url(${getClientImageUrl(data?.backgroundImage)})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div className={cn('mx-auto max-w-7xl px-6 pt-16 md:px-10')}>
+        <div className="mb-10">
+          <h2
+            className={cn(
+              'text-white font-semibold',
+              device === 'desktop' ? 'text-5xl text-left' : 'text-4xl'
+            )}
+          >
+            {data?.title?.[lang] || 'Get in touch'}
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            {data?.subtitle?.[lang]}
+          <p
+            className={cn(
+              'font-extrabold text-[#0888A3] mt-2',
+              device === 'desktop' ? 'text-5xl' : 'text-4xl'
+            )}
+          >
+            {data?.secondaryTitle?.[lang]}
           </p>
-        </motion.div>
+        </div>
 
-        {/* Features Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+        <div
+          className={cn(
+            'grid gap-12 pb-10',
+            device === 'desktop'
+              ? 'grid-cols-1 lg:grid-cols-2 items-start'
+              : 'grid-cols-1 text-center'
+          )}
         >
-          {features.map(item => {
-            const IconComponent = item.icon;
-            return (
-              <motion.div
-                key={item.key}
-                variants={itemVariants}
-                className="group relative p-8 bg-black/40 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-              >
-                {/* Icon */}
-                <motion.div
-                  className={`inline-flex p-4 rounded-2xl ${item.bgColor} ${item.color} mb-6 group-hover:scale-110 transition-transform duration-300`}
-                  whileHover={{
-                    rotate: [0, -10, 10, 0],
-                    transition: { duration: 0.5 },
-                  }}
-                >
-                  <IconComponent className="size-8" />
-                </motion.div>
-
-                {/* Content */}
-                <div>
-                  <h3 className="text-2xl font-bold mb-4 text-white group-hover:text-primary transition-colors duration-300">
-                    {item.title?.[lang]}
-                  </h3>
-                  <p className="text-gray-300 leading-relaxed">{item.description?.[lang]}</p>
+          {/* LEFT: Contact Form */}
+          <div className={cn(device === 'mobile' && 'flex flex-col items-center', 'w-full')}>
+            <form
+              className={cn('w-full space-y-6', device === 'desktop' ? 'max-w-none' : 'max-w-lg')}
+              onSubmit={e => {
+                e.preventDefault();
+                // TODO: connect saveMessage here
+              }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName" className="sr-only">
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstName"
+                    required
+                    placeholder={lang === 'mn' ? 'Нэр' : 'First Name'}
+                    className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                  />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName" className="sr-only">
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastName"
+                    required
+                    placeholder={lang === 'mn' ? 'Овог' : 'Last Name'}
+                    className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                  />
+                </div>
+              </div>
 
-                {/* Hover Effect Overlay */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                  whileHover={{
-                    scale: 1.02,
-                    transition: { duration: 0.2 },
-                  }}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="sr-only">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="Email"
+                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
                 />
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="sr-only">
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  inputMode="tel"
+                  required
+                  placeholder={lang === 'mn' ? 'Утас' : 'Contact No'}
+                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="subject" className="sr-only">
+                  Subject
+                </Label>
+                <Input
+                  id="subject"
+                  required
+                  placeholder={lang === 'mn' ? 'Гарчиг' : 'Subject'}
+                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="message" className="sr-only">
+                  Message
+                </Label>
+                <Textarea
+                  id="message"
+                  required
+                  rows={4}
+                  placeholder={lang === 'mn' ? 'Мессежээ бичнэ үү' : 'Type Your Message Here'}
+                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400 resize-none"
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className={cn(
+                  'rounded-full font-semibold bg-[#e63946]  hover:hover:bg-[#0888A3]',
+                  device === 'desktop' ? 'w-full py-6' : 'w-full py-5'
+                )}
+              >
+                {lang === 'mn' ? 'ИЛГЭЭХ' : 'SUBMIT INFORMATION'}
+              </Button>
+            </form>
+          </div>
+
+          {/* RIGHT: Contact Info */}
+          <div className={cn(device === 'mobile' && 'text-center')}>
+            <h3 className="text-xl text-white font-bold">
+              {data?.location?.[lang] || 'Our Location'}
+            </h3>
+            <p className="text-white mt-3">
+              {data?.description?.[lang] ||
+                'Feel free to reach us through any of the channels below.'}
+            </p>
+
+            <div
+              className={cn(
+                'mt-6 space-y-4 text-white',
+                device === 'desktop' ? '' : 'max-w-lg mx-auto'
+              )}
+            >
+              <div className="flex items-start gap-3">
+                <FaMapMarkerAlt className="mt-1 shrink-0" />
+                <p>{data?.address?.[lang] || '—'}</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <FaPhone className="mt-1  shrink-0" />
+                <p>{data?.phone || '—'}</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <FaPaperPlane className="mt-1 shrink-0" />
+                <p>{data?.email || '—'}</p>
+              </div>
+            </div>
+
+            <div
+              className={cn(
+                'flex gap-4 text-xl mt-6 text-white',
+                device === 'mobile' && 'justify-center'
+              )}
+            >
+              <a
+                href={data?.facebookUrl || '#'}
+                aria-label="Facebook"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaFacebook className="hover:text-[#0888A3] cursor-pointer" />
+              </a>
+              <a
+                href={data?.linkedinUrl || '#'}
+                aria-label="LinkedIn"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaLinkedin className="hover:text-[#0888A3] cursor-pointer" />
+              </a>
+              <a
+                href={data?.instagramUrl || '#'}
+                aria-label="Instagram"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaInstagram className="hover:text-[#0888A3] cursor-pointer" />
+              </a>
+              <a
+                href={data?.pinterestUrl || '#'}
+                aria-label="Pinterest"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaPinterest className="hover:text-[#0888A3] cursor-pointer" />
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

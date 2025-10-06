@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { FaArrowRight } from 'react-icons/fa6';
 import { Card, CardContent } from '@/components/ui/card';
-import { getImageUrl } from '@/utils';
+import { getImageUrl, getClientImageUrl } from '@/utils';
 import { Blog } from '@/lib/types/blog.types';
 
 interface BlogCardProps {
@@ -17,7 +17,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
       {/* Image */}
       <div className="w-full overflow-hidden">
         <Image
-          src={getImageUrl(blog.thumbImage)}
+          src={getClientImageUrl(blog.thumbImage)}
           alt={blog.title}
           width={400}
           height={400}
@@ -26,7 +26,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog }) => {
       </div>
 
       <CardContent className="px-0 pt-4">
-        <h3 className="text-xl font-bold mb-3 text-white transition-colors group-hover:text-primary cursor-pointer">
+        <h3 className="text-xl font-bold mb-3 text-white transition-colors group-hover:text-[#0888A3] cursor-pointer">
           {blog.title}
         </h3>
 

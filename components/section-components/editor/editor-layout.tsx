@@ -11,7 +11,7 @@ const EditorLayout = ({ children, preview }: EditorLayoutProps) => {
   const isAdmin = ['super-admin', 'admin'].includes(currentUser?.role);
 
   return (
-    <div className="flex h-[calc(100vh-64px)]">
+    <div className="flex  h-[calc(100vh-64px)]">
       {/* Main Content Area */}
       <div className="flex-1 p-6">
         <div className="max-w-6xl mx-auto h-full flex flex-col">

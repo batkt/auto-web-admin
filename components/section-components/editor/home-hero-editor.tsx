@@ -63,6 +63,11 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
     const newErrors: typeof errors = {};
     if (!values.mainTitle.en.trim()) newErrors.titleEn = true;
     if (!values.mainTitle.mn.trim()) newErrors.titleMn = true;
+    if (!values.secondaryTitle.en.trim()) newErrors.titleEn = true;
+    if (!values.secondaryTitle.mn.trim()) newErrors.titleEn = true;
+    if (!values.description.en.trim()) newErrors.titleEn = true;
+    if (!values.description.mn.trim()) newErrors.titleEn = true;
+
     if (!values.ctaText.en.trim()) newErrors.subtitleEn = true;
     if (!values.ctaText.mn.trim()) newErrors.subtitleMn = true;
 
@@ -161,6 +166,25 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
                     onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
                     className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
                     placeholder="Гарчиг оруулах"
+                  />
+                  {errors.titleEn && (
+                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
+                  )}
+                  {errors.titleMn && (
+                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+                    Цогцолбор нэмэх
+                  </Label>
+                  <Input
+                    id="description"
+                    {...register(`description.${lang}`)}
+                    onChange={e => handleFieldChange(`description.${lang}`, e.target.value)}
+                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    placeholder="Цогцолбор оруулах"
                   />
                   {errors.titleEn && (
                     <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>

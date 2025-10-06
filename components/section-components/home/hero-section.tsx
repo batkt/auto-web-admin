@@ -18,7 +18,7 @@ const HeroSection = ({
   return (
     <div
       style={{
-        backgroundImage: `url(${getClientImageUrl(data.backgroundImage)})`,
+        backgroundImage: `url(${getClientImageUrl(data?.backgroundImage)})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',

@@ -18,20 +18,12 @@ const SectionDetail = async (props: SectionDetailProps) => {
   const section = sectionResponse.data;
 
   let list: Blog[] = [];
-  let proList: Product[] = [];
   if (section.key === 'home-blog') {
     const listResponse = await getBlogList({
       limit: 3,
     });
 
     list = listResponse.data.data;
-  }
-  if (section.key === 'home-products') {
-    const proResponse = await getProductList({
-      limit: 6,
-    });
-
-    proList = proResponse.data.data;
   }
 
   let footerData: any = {};
@@ -48,12 +40,7 @@ const SectionDetail = async (props: SectionDetailProps) => {
 
   return (
     <div>
-      <SectionContent
-        section={section}
-        productList={proList}
-        blogList={list}
-        footerData={footerData}
-      />
+      <SectionContent section={section} blogList={list} footerData={footerData} />
     </div>
   );
 };

@@ -60,7 +60,7 @@ const SectionEditor = ({ section, onDataChange, preview }: SectionEditorProps) =
           />
         );
 
-      case 'home-help':
+      case 'home-contact':
         return (
           <HomeHelpEditor
             data={section.data as any}
@@ -70,7 +70,7 @@ const SectionEditor = ({ section, onDataChange, preview }: SectionEditorProps) =
         );
       // return <AboutSection lang={lang} device={_selectedDevice} data={section.data} />
 
-      case 'home-gallery':
+      case 'home-quotes':
         return (
           <HomeGalleryEditor
             data={section.data as any}
