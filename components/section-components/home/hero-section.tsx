@@ -15,15 +15,21 @@ const HeroSection = ({
   data: any;
   lang: string;
 }) => {
+  const bgUrl = data?.backgroundImage ? getImageUrl(data.backgroundImage) : '';
+  const productUrl = data?.productImage ? getImageUrl(data.productImage) : undefined;
   return (
-    <div
-      style={{
-        backgroundImage: `url(${getClientImageUrl(data?.backgroundImage)})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+    <section id="#" className="relative isolate w-full overflow-hidden">
+      {bgUrl && (
+        <Image
+          src={bgUrl}
+          alt=""
+          fill
+          sizes="100vw"
+          priority
+          aria-hidden
+          className="pointer-events-none select-none object-cover object-center -z-10"
+        />
+      )}
       <div className={cn('mx-auto max-w-7xl px-4 sm:px-6 lg:px-10')}>
         <div
           className={cn(
@@ -124,7 +130,7 @@ const HeroSection = ({
           {data.ctaText[lang]}
         </button>
       </div> */}
-    </div>
+    </section>
   );
 };
 
