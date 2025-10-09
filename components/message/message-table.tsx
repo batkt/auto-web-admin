@@ -56,10 +56,12 @@ const MessageTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {messageList.data.map(message => (
+          {messageList.data.map((message, index) => (
             <TableRow key={message._id} className="hover:bg-muted/50">
               <TableCell className="font-medium">
-                <div className="text-sm font-medium max-w-20 truncate">{message._id}</div>
+                <div className="text-sm font-medium max-w-20 truncate">
+                  {(messageList.currentPage - 1) * 10 + (index + 1)}
+                </div>
               </TableCell>
               <TableCell>
                 <div className="text-sm font-medium truncate">{message.subject}</div>

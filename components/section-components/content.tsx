@@ -5,15 +5,7 @@ import SectionViewer from './viewer';
 import SectionEditor from './editor';
 import { Blog } from '@/lib/types/blog.types';
 
-const SectionContent = ({
-  section,
-  blogList,
-  footerData,
-}: {
-  section: SectionData;
-  blogList: Blog[];
-  footerData: any;
-}) => {
+const SectionContent = ({ section, blogList }: { section: SectionData; blogList: Blog[] }) => {
   const [sectionData, setSectionData] = useState<SectionData>(section);
 
   const handleDataChange = useCallback((updatedData: any) => {

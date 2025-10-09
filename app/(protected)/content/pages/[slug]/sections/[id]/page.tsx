@@ -40,7 +40,7 @@ const SectionDetail = async (props: SectionDetailProps) => {
 
   return (
     <div>
-      <SectionContent section={section} blogList={list} footerData={footerData} />
+      <SectionContent section={section} blogList={list} />
     </div>
   );
 };

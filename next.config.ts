@@ -41,6 +41,12 @@ const nextConfig: NextConfig = {
         hostname: 'backend',
         pathname: '/uploads/**',
       },
+      {
+        protocol: 'http',
+        hostname: '192.168.1.196',
+        port: '4001',
+        pathname: '/uploads/**',
+      },
     ],
   },
 };
