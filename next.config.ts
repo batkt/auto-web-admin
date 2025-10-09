@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   /* config options here */
   output: 'standalone',
   basePath: '/admin',
+  async redirects() {
+    return [
+      {
+        source: '/', // жинхэнэ root
+        destination: '/admin', // basePath руу
+        permanent: false,
+        basePath: false, // basePath-ийг source-д хэрэглэхгүй!
+      },
+    ];
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
