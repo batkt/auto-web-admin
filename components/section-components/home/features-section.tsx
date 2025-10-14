@@ -2,22 +2,26 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+import { useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { toast } from 'sonner';
+import { BiSolidPhoneCall } from 'react-icons/bi';
+import { FaLocationDot, FaXTwitter } from 'react-icons/fa6';
 import {
-  FaMapMarkerAlt,
-  FaPhone,
-  FaPaperPlane,
-  FaFacebook,
-  FaLinkedin,
+  FaTelegramPlane,
+  FaFacebookF,
+  FaLinkedinIn,
   FaInstagram,
-  FaPinterest,
+  FaPinterestP,
+  FaGooglePlusG,
 } from 'react-icons/fa';
 import { getClientImageUrl, getImageUrl } from '@/utils';
+import { saveMessage, ContactFormData } from '@/lib/actions/message';
+
+const underlineBase =
+  'w-full bg-transparent border-0 border-b border-white/25 rounded-none px-0 text-white placeholder:text-gray-400 focus:ring-0 focus:border-white/60 focus:border-b-2';
 
 const FeaturesSection = ({
   device,
@@ -28,29 +32,37 @@ const FeaturesSection = ({
   data: any;
   lang: string;
 }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<ContactFormData>();
+
   return (
     <section
+      id="contact"
+      className="relative min-h-screen w-full"
       style={{
         backgroundImage: `url(${getClientImageUrl(data?.backgroundImage)})`,
-        backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
-      <div className={cn('mx-auto max-w-7xl px-6 pt-16 md:px-10')}>
-        <div className="mb-10">
-          <h2
+      <div className={cn('mx-auto max-w-7xl px-6 pt-20 md:px-10')}>
+        <div className="mb-4">
+          <p
             className={cn(
-              'text-white font-semibold',
-              device === 'desktop' ? 'text-5xl text-left' : 'text-4xl'
+              'text-white font-extrabold font-title',
+              device === 'desktop' ? 'text-5xl text-left' : 'text-3xl text-center'
             )}
           >
             {data?.title?.[lang] || 'Get in touch'}
-          </h2>
+          </p>
           <p
             className={cn(
-              'font-extrabold text-[#0888A3] mt-2',
-              device === 'desktop' ? 'text-5xl' : 'text-4xl'
+              'text-[#0888A3] font-extrabold mt-2 font-title',
+              device === 'desktop' ? 'text-5xl text-left mb-20' : 'text-3xl text-center mb-20'
             )}
           >
             {data?.secondaryTitle?.[lang]}
@@ -59,177 +71,214 @@ const FeaturesSection = ({
 
         <div
           className={cn(
-            'grid gap-12 pb-10',
-            device === 'desktop'
-              ? 'grid-cols-1 lg:grid-cols-2 items-start'
-              : 'grid-cols-1 text-center'
+            'grid gap-20 pb-24',
+            device === 'desktop' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'
           )}
         >
           {/* LEFT: Contact Form */}
-          <div className={cn(device === 'mobile' && 'flex flex-col items-center', 'w-full')}>
-            <form
-              className={cn('w-full space-y-6', device === 'desktop' ? 'max-w-none' : 'max-w-lg')}
-              onSubmit={e => {
-                e.preventDefault();
-                // TODO: connect saveMessage here
-              }}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="sr-only">
-                    First Name
-                  </Label>
-                  <Input
-                    id="firstName"
-                    required
-                    placeholder={lang === 'mn' ? 'Нэр' : 'First Name'}
-                    className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="sr-only">
-                    Last Name
-                  </Label>
-                  <Input
-                    id="lastName"
-                    required
-                    placeholder={lang === 'mn' ? 'Овог' : 'Last Name'}
-                    className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="sr-only">
-                  Email
-                </Label>
+          <div className={cn(device === 'desktop' ? 'max-w-[460px]' : 'max-w-[460px] mx-auto')}>
+            <form className="space-y-8">
+              {/* Name */}
+              <div className="space-y-3">
                 <Input
-                  id="email"
-                  type="email"
-                  required
-                  placeholder="Email"
-                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                  id="firstName"
+                  placeholder={lang === 'mn' ? 'Нэр' : 'Name'}
+                  className={underlineBase}
+                  {...register('firstName', { required: 'Name is required' })}
                 />
+                {errors.firstName && (
+                  <p className="text-sm text-red-500">{errors.firstName.message}</p>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="sr-only">
-                  Phone
-                </Label>
+              {/* Contact No */}
+              <div className="space-y-3">
                 <Input
                   id="phone"
                   type="tel"
-                  inputMode="tel"
-                  required
                   placeholder={lang === 'mn' ? 'Утас' : 'Contact No'}
-                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                  className={underlineBase}
+                  {...register('phone', {
+                    required: 'Phone number is required',
+                  })}
                 />
+                {errors.phone && <p className="text-sm text-red-500">{errors.phone.message}</p>}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="subject" className="sr-only">
-                  Subject
-                </Label>
+              {/* Email */}
+              <div className="space-y-3">
                 <Input
-                  id="subject"
-                  required
-                  placeholder={lang === 'mn' ? 'Гарчиг' : 'Subject'}
-                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400"
+                  id="email"
+                  type="email"
+                  placeholder="Email Address"
+                  className={underlineBase}
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Invalid email address',
+                    },
+                  })}
                 />
+                {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="message" className="sr-only">
-                  Message
-                </Label>
+              {/* Message */}
+              <div className="space-y-3">
                 <Textarea
                   id="message"
-                  required
-                  rows={4}
+                  rows={3}
                   placeholder={lang === 'mn' ? 'Мессежээ бичнэ үү' : 'Type Your Message Here'}
-                  className="bg-transparent border-b border-white/30 rounded-none px-0 text-white placeholder:text-gray-300 focus:ring-0 focus:border-cyan-400 resize-none"
+                  className={`${underlineBase} resize-none`}
+                  {...register('message', {
+                    required: 'Message is required',
+                    minLength: { value: 10, message: 'Message must be at least 10 characters' },
+                  })}
                 />
+                {errors.message && <p className="text-sm text-red-500">{errors.message.message}</p>}
               </div>
 
-              <Button
+              <button
                 type="submit"
-                className={cn(
-                  'rounded-full font-semibold bg-[#e63946]  hover:hover:bg-[#0888A3]',
-                  device === 'desktop' ? 'w-full py-6' : 'w-full py-5'
-                )}
+                disabled={true}
+                className="mt-5 w-full inline-flex items-center justify-center rounded-full bg-red-700 text-white font-semibold shadow-lg transition-colors duration-300 ease-in-out hover:bg-[#0888A3] px-8 py-4 text-base"
               >
-                {lang === 'mn' ? 'ИЛГЭЭХ' : 'SUBMIT INFORMATION'}
-              </Button>
+                {isSubmitting
+                  ? lang === 'mn'
+                    ? 'Илгээж байна...'
+                    : 'Sending...'
+                  : lang === 'mn'
+                  ? 'ИЛГЭЭХ'
+                  : 'SUBMIT INFORMATION'}
+              </button>
             </form>
           </div>
 
           {/* RIGHT: Contact Info */}
-          <div className={cn(device === 'mobile' && 'text-center')}>
-            <h3 className="text-xl text-white font-bold">
+          <div
+            className={cn(
+              'text-white',
+              device === 'desktop' ? 'max-w-[560px]' : 'max-w-[560px] mx-auto text-center'
+            )}
+          >
+            <h3
+              className={cn(
+                'text-3xl mb-12 font-title',
+                device === 'desktop' ? 'text-left' : 'text-center'
+              )}
+            >
               {data?.location?.[lang] || 'Our Location'}
             </h3>
-            <p className="text-white mt-3">
+            <p
+              className={cn(
+                'text-white/50 mb-12 font-description',
+                device === 'desktop' ? 'text-left' : 'text-center'
+              )}
+            >
               {data?.description?.[lang] ||
                 'Feel free to reach us through any of the channels below.'}
             </p>
 
-            <div
-              className={cn(
-                'mt-6 space-y-4 text-white',
-                device === 'desktop' ? '' : 'max-w-lg mx-auto'
-              )}
-            >
-              <div className="flex items-start gap-3">
-                <FaMapMarkerAlt className="mt-1 shrink-0" />
-                <p>{data?.address?.[lang] || '—'}</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaPhone className="mt-1  shrink-0" />
-                <p>{data?.phone || '—'}</p>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaPaperPlane className="mt-1 shrink-0" />
-                <p>{data?.email || '—'}</p>
-              </div>
-            </div>
+            <ul className="space-y-8 mb-12">
+              <li
+                className={cn(
+                  'flex gap-4',
+                  device === 'desktop' ? 'flex-row items-start' : 'flex-col items-center'
+                )}
+              >
+                <FaLocationDot className="text-white text-4xl md:text-3xl" />
+                <div className={cn(device === 'desktop' ? 'text-left' : 'text-center')}>
+                  <p>{data?.address?.[lang] || '—'}</p>
+                </div>
+              </li>
+              <li
+                className={cn(
+                  'flex gap-4',
+                  device === 'desktop' ? 'flex-row items-start' : 'flex-col items-center'
+                )}
+              >
+                <BiSolidPhoneCall className="text-white text-4xl md:text-3xl" />
+                <div
+                  className={cn(
+                    'flex gap-4 md:gap-8',
+                    device === 'desktop' ? 'flex-row text-left' : 'flex-col text-center'
+                  )}
+                >
+                  {data?.phone || '—'}
+                </div>
+              </li>
+              <li
+                className={cn(
+                  'flex gap-4',
+                  device === 'desktop' ? 'flex-row items-start' : 'flex-col items-center'
+                )}
+              >
+                <FaTelegramPlane className="text-white text-4xl md:text-3xl" />
+                <span className={cn(device === 'desktop' ? 'text-left' : 'text-center')}>
+                  {data?.email || '—'}
+                </span>
+              </li>
+            </ul>
 
             <div
               className={cn(
-                'flex gap-4 text-xl mt-6 text-white',
-                device === 'mobile' && 'justify-center'
+                'flex items-center gap-5 text-white/80 text-lg',
+                device === 'desktop' ? 'justify-start' : 'justify-center'
               )}
             >
               <a
                 href={data?.facebookUrl || '#'}
+                className="hover:text-[#0888A3]"
                 aria-label="Facebook"
                 target="_blank"
                 rel="noreferrer"
               >
-                <FaFacebook className="hover:text-[#0888A3] cursor-pointer" />
+                <FaFacebookF />
+              </a>
+              <a
+                href={data?.twitterUrl || '#'}
+                className="hover:text-[#0888A3]"
+                aria-label="X"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaXTwitter />
               </a>
               <a
                 href={data?.linkedinUrl || '#'}
+                className="hover:text-[#0888A3]"
                 aria-label="LinkedIn"
                 target="_blank"
                 rel="noreferrer"
               >
-                <FaLinkedin className="hover:text-[#0888A3] cursor-pointer" />
+                <FaLinkedinIn />
               </a>
               <a
                 href={data?.instagramUrl || '#'}
+                className="hover:text-[#0888A3]"
                 aria-label="Instagram"
                 target="_blank"
                 rel="noreferrer"
               >
-                <FaInstagram className="hover:text-[#0888A3] cursor-pointer" />
+                <FaInstagram />
               </a>
               <a
                 href={data?.pinterestUrl || '#'}
+                className="hover:text-[#0888A3]"
                 aria-label="Pinterest"
                 target="_blank"
                 rel="noreferrer"
               >
-                <FaPinterest className="hover:text-[#0888A3] cursor-pointer" />
+                <FaPinterestP />
+              </a>
+              <a
+                href={data?.googlePlusUrl || '#'}
+                className="hover:text-[#0888A3]"
+                aria-label="Google Plus"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <FaGooglePlusG />
               </a>
             </div>
           </div>

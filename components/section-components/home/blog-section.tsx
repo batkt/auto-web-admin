@@ -19,31 +19,10 @@ const BlogSection = ({
   lang: string;
   blogList: Blog[];
 }) => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.1 } },
-  };
-
-  const item = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: easeOut } },
-  };
-
-  const card = {
-    hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: easeOut } },
-  };
-
   const bgUrl = data?.backgroundImage ? getImageUrl(data.backgroundImage) : '';
 
   return (
-    <motion.section
-      className="relative w-full overflow-hidden "
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
-      variants={containerVariants}
-    >
+    <section className="relative w-full overflow-hidden ">
       {bgUrl && (
         <>
           <Image
@@ -65,60 +44,49 @@ const BlogSection = ({
             : 'h-auto pt-12 sm:pt-12 pb-12'
         )}
       >
-        <motion.h2
+        <h2
           className={cn(
             'text-center  font-semibold text-white',
             device === 'desktop' ? 'mt-10 text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl'
           )}
-          variants={item}
         >
           {data?.title?.[lang]}
-        </motion.h2>
+        </h2>
 
-        <motion.h3
+        <h3
           className={cn(
             'mt-2 text-center font-extrabold text-[#0888A3]',
             device === 'desktop' ? 'text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl'
           )}
-          variants={item}
         >
           {data?.secondaryTitle?.[lang]}
-        </motion.h3>
+        </h3>
 
-        <motion.p
+        <p
           className={cn(
             'mx-auto text-center text-white/90 leading-relaxed',
             device === 'desktop'
               ? 'mt-6 text-lg lg:text-xl max-w-3xl'
               : 'mt-4 text-base sm:text-lg max-w-2xl'
           )}
-          variants={item}
         >
           {data?.description?.[lang]}
-        </motion.p>
+        </p>
 
-        <motion.div
+        <div
           className={cn(
             'mt-8 grid',
             device === 'desktop' ? 'grid-cols-3 gap-8 lg:gap-10' : 'grid-cols-1 gap-6'
           )}
-          variants={containerVariants}
         >
           {blogList.map(blog => (
-            <motion.div
-              key={blog._id}
-              variants={card}
-              whileHover={{
-                y: -8,
-                transition: { duration: 0.28, ease: 'easeOut' },
-              }}
-            >
+            <div key={blog._id}>
               <BlogCard blog={blog} />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

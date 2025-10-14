@@ -46,7 +46,6 @@ const MessageTable = ({
         <TableHeader>
           <TableRow>
             <TableHead className="font-semibold">№</TableHead>
-            <TableHead className="font-semibold">Гарчиг</TableHead>
             <TableHead className="font-semibold">Нэр</TableHead>
             <TableHead className="font-semibold">И-мэйл</TableHead>
             <TableHead className="font-semibold">Утас</TableHead>
@@ -63,9 +62,7 @@ const MessageTable = ({
                   {(messageList.currentPage - 1) * 10 + (index + 1)}
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="text-sm font-medium truncate">{message.subject}</div>
-              </TableCell>
+
               <TableCell>
                 <div className="text-sm font-medium truncate">
                   {message?.firstName}
