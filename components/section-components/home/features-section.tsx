@@ -57,7 +57,7 @@ const FeaturesSection = ({
               device === 'desktop' ? 'text-5xl text-left' : 'text-3xl text-center'
             )}
           >
-            {data?.title?.[lang] || 'Get in touch'}
+            {data?.title?.[lang]}
           </p>
           <p
             className={cn(
@@ -167,7 +167,7 @@ const FeaturesSection = ({
                 device === 'desktop' ? 'text-left' : 'text-center'
               )}
             >
-              {data?.location?.[lang] || 'Our Location'}
+              {data?.location?.[lang]}
             </h3>
             <p
               className={cn(
@@ -175,8 +175,7 @@ const FeaturesSection = ({
                 device === 'desktop' ? 'text-left' : 'text-center'
               )}
             >
-              {data?.description?.[lang] ||
-                'Feel free to reach us through any of the channels below.'}
+              {data?.description?.[lang]}
             </p>
 
             <ul className="space-y-8 mb-12">
@@ -188,7 +187,7 @@ const FeaturesSection = ({
               >
                 <FaLocationDot className="text-white text-4xl md:text-3xl" />
                 <div className={cn(device === 'desktop' ? 'text-left' : 'text-center')}>
-                  <p>{data?.address?.[lang] || '—'}</p>
+                  <p>{data?.address?.[lang]}</p>
                 </div>
               </li>
               <li
@@ -204,7 +203,7 @@ const FeaturesSection = ({
                     device === 'desktop' ? 'flex-row text-left' : 'flex-col text-center'
                   )}
                 >
-                  {data?.phone || '—'}
+                  {data?.phone}
                 </div>
               </li>
               <li
@@ -215,7 +214,7 @@ const FeaturesSection = ({
               >
                 <FaTelegramPlane className="text-white text-4xl md:text-3xl" />
                 <span className={cn(device === 'desktop' ? 'text-left' : 'text-center')}>
-                  {data?.email || '—'}
+                  {data?.email}
                 </span>
               </li>
             </ul>
