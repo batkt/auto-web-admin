@@ -54,13 +54,6 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
 
   const onSubmit = async (values: HomeBlogFormData) => {
     const newErrors: typeof errors = {};
-    if (!values.title.en.trim()) newErrors.titleEn = true;
-    if (!values.title.mn.trim()) newErrors.titleMn = true;
-    if (!values.secondaryTitle.en.trim()) newErrors.secondaryTitleEn = true;
-    if (!values.secondaryTitle.mn.trim()) newErrors.titleMn = true;
-
-    if (!values.description.en.trim()) newErrors.descriptionEn = true;
-    if (!values.description.mn.trim()) newErrors.descriptionMn = true;
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -135,15 +128,9 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
                     id="title"
                     {...register(`title.${lang}`)}
                     onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
 
                 <div>
@@ -154,18 +141,9 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
                     id="title"
                     {...register(`secondaryTitle.${lang}`)}
                     onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
-                    className={cn(
-                      'mt-1',
-                      errors.secondaryTitleEn || errors.secondaryTitleEn ? 'border-red-500' : ''
-                    )}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
 
                 <div>
@@ -176,19 +154,10 @@ const HomeBlogEditor = ({ data, onDataChange, sectionId }: HomeBlogEditorProps) 
                     id="description"
                     {...register(`description.${lang}`)}
                     onChange={e => handleFieldChange(`description.${lang}`, e.target.value)}
-                    className={cn(
-                      'mt-1',
-                      errors.descriptionEn || errors.descriptionMn ? 'border-red-500' : ''
-                    )}
+                    className="mt-1"
                     placeholder="Тайлбар оруулах"
                     rows={3}
                   />
-                  {errors.descriptionEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний тайлбар заавал бөглөх</p>
-                  )}
-                  {errors.descriptionMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний тайлбар заавал бөглөх</p>
-                  )}
                 </div>
 
                 <Separator />

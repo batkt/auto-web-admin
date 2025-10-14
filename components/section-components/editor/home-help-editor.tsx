@@ -60,10 +60,6 @@ const HomeHelpEditor = ({ data, onDataChange, sectionId }: HomeHelpEditorProps) 
   const onSubmit = async (values: HelpFormData) => {
     // ---- Client-side validations (simple) ----
     const nextErrors: typeof errors = {};
-    if (!values.title.en?.trim()) nextErrors.titleEn = true;
-    if (!values.title.mn?.trim()) nextErrors.titleMn = true;
-    if (!values.secondaryTitle.en?.trim()) nextErrors.secondaryTitleEn = true;
-    if (!values.secondaryTitle.mn?.trim()) nextErrors.secondaryTitleMn = true;
 
     // very light checks
     if (!values.email?.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
@@ -158,20 +154,9 @@ const HomeHelpEditor = ({ data, onDataChange, sectionId }: HomeHelpEditorProps) 
                     id="title"
                     {...register(`title.${lang}`)}
                     onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                    className={cn(
-                      'mt-1',
-                      (errors.titleEn && lang === 'en') || (errors.titleMn && lang === 'mn')
-                        ? 'border-red-500'
-                        : ''
-                    )}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && lang === 'en' && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && lang === 'mn' && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
 
                 {/* Secondary Title */}
@@ -183,25 +168,9 @@ const HomeHelpEditor = ({ data, onDataChange, sectionId }: HomeHelpEditorProps) 
                     id="secondaryTitle"
                     {...register(`secondaryTitle.${lang}`)}
                     onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
-                    className={cn(
-                      'mt-1',
-                      (errors.secondaryTitleEn && lang === 'en') ||
-                        (errors.secondaryTitleMn && lang === 'mn')
-                        ? 'border-red-500'
-                        : ''
-                    )}
+                    className="mt-1"
                     placeholder="Дэд гарчиг оруулах"
                   />
-                  {errors.secondaryTitleEn && lang === 'en' && (
-                    <p className="text-red-500 text-xs mt-1">
-                      Англи хэлний дэд гарчиг заавал бөглөх
-                    </p>
-                  )}
-                  {errors.secondaryTitleMn && lang === 'mn' && (
-                    <p className="text-red-500 text-xs mt-1">
-                      Монгол хэлний дэд гарчиг заавал бөглөх
-                    </p>
-                  )}
                 </div>
               </div>
             </div>

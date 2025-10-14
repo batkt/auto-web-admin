@@ -47,8 +47,8 @@ const AboutSection = ({
 
             <p
               className={cn(
-                'font-bold text-3xl sm:text-4xl text-white mb-4',
-                device === 'desktop' ? 'text-left' : 'text-center'
+                'font-bold text-3xl sm:text-lg text-white mb-4',
+                device === 'desktop' ? 'text-left' : ' text-center'
               )}
             >
               {data.title?.[lang]}

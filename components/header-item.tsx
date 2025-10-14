@@ -52,7 +52,7 @@ const HeaderItems = ({
             <li key={`menuIndex=${index}`}>
               <Link
                 href={menu.path}
-                className="py-4 hover:underline font-semibold text-lg transition-colors"
+                className="py-4 hover:text-[#0888A3] font-semibold text-sm transition-colors"
               >
                 {menu.name?.[lang]}
               </Link>

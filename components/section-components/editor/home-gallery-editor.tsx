@@ -63,16 +63,8 @@ const HomeGalleryEditor = ({ data, onDataChange, sectionId }: HomeGalleryEditorP
 
   const onSubmit = async (values: HomeGalleryFormData) => {
     const newErrors: typeof errors = {};
-    if (!values.title.en?.trim()) newErrors.titleEn = true;
-    if (!values.title.mn?.trim()) newErrors.titleMn = true;
 
     const newItemErrors: typeof itemErrors = {};
-    values.item?.forEach((it, idx) => {
-      const err: { proName?: boolean; proImage?: boolean } = {};
-      if (!it.proName?.trim()) err.proName = true;
-      if (!it.proImage?.trim()) err.proImage = true;
-      if (Object.keys(err).length) newItemErrors[idx] = err;
-    });
 
     setErrors(newErrors);
     setItemErrors(newItemErrors);
@@ -158,15 +150,9 @@ const HomeGalleryEditor = ({ data, onDataChange, sectionId }: HomeGalleryEditorP
                     id="title"
                     {...register(`title.${lang}`)}
                     onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
 
                 <div>
@@ -253,12 +239,9 @@ const HomeGalleryEditor = ({ data, onDataChange, sectionId }: HomeGalleryEditorP
                         <Input
                           {...register(`item.${index}.proName` as const)}
                           onChange={e => handleFieldChange(`item.${index}.proName`, e.target.value)}
-                          className={cn(itemErrors[index]?.proName && 'border-red-500')}
+                          className="mt-1"
                           placeholder="Жишээ: Dior Homme"
                         />
-                        {itemErrors[index]?.proName && (
-                          <p className="text-xs text-red-500 mt-1">Энэ талбарыг бөглөнө үү</p>
-                        )}
                       </div>
 
                       <div className="space-y-2">
@@ -285,9 +268,6 @@ const HomeGalleryEditor = ({ data, onDataChange, sectionId }: HomeGalleryEditorP
                         maxSize={5}
                         acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
                       />
-                      {itemErrors[index]?.proImage && (
-                        <p className="text-xs text-red-500 mt-1">Зураг нэмнэ үү</p>
-                      )}
                     </div>
                   </div>
                 ))}

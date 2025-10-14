@@ -61,15 +61,6 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
 
   const onSubmit = async (values: HeroFormData) => {
     const newErrors: typeof errors = {};
-    if (!values.mainTitle.en.trim()) newErrors.titleEn = true;
-    if (!values.mainTitle.mn.trim()) newErrors.titleMn = true;
-    if (!values.secondaryTitle.en.trim()) newErrors.titleEn = true;
-    if (!values.secondaryTitle.mn.trim()) newErrors.titleEn = true;
-    if (!values.description.en.trim()) newErrors.titleEn = true;
-    if (!values.description.mn.trim()) newErrors.titleEn = true;
-
-    if (!values.ctaText.en.trim()) newErrors.subtitleEn = true;
-    if (!values.ctaText.mn.trim()) newErrors.subtitleMn = true;
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -146,15 +137,9 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
                     id="mainTitle"
                     {...register(`mainTitle.${lang}`)}
                     onChange={e => handleFieldChange(`mainTitle.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
                 <div>
                   <Label htmlFor="secondaryTitle" className="text-sm font-medium text-gray-700">
@@ -164,15 +149,9 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
                     id="secondaryTitle"
                     {...register(`secondaryTitle.${lang}`)}
                     onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
 
                 <div>
@@ -183,15 +162,9 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
                     id="description"
                     {...register(`description.${lang}`)}
                     onChange={e => handleFieldChange(`description.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    className="mt-1"
                     placeholder="Цогцолбор оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи хэлний гарчиг заавал бөглөх</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол хэлний гарчиг заавал бөглөх</p>
-                  )}
                 </div>
 
                 <div>
@@ -202,22 +175,9 @@ const HomeHeroEditor = ({ data, onDataChange, sectionId }: HomeHeroEditorProps) 
                     id="ctaText"
                     {...register(`ctaText.${lang}`)}
                     onChange={e => handleFieldChange(`ctaText.${lang}`, e.target.value)}
-                    className={cn(
-                      'mt-1',
-                      errors.subtitleEn || errors.subtitleMn ? 'border-red-500' : ''
-                    )}
+                    className="mt-1"
                     placeholder="Дэд гарчиг оруулах"
                   />
-                  {errors.subtitleEn && (
-                    <p className="text-red-500 text-xs mt-1">
-                      Англи хэлний дэд гарчиг заавал бөглөх
-                    </p>
-                  )}
-                  {errors.subtitleMn && (
-                    <p className="text-red-500 text-xs mt-1">
-                      Монгол хэлний дэд гарчиг заавал бөглөх
-                    </p>
-                  )}
                 </div>
 
                 <div>

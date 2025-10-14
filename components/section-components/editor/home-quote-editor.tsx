@@ -93,16 +93,8 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
 
   const onSubmit = async (form: HomeQuoteFormData) => {
     const newErrors: typeof errors = {};
-    if (!form.title.en?.trim()) newErrors.titleEn = true;
-    if (!form.title.mn?.trim()) newErrors.titleMn = true;
 
     const newItemErrors: typeof itemErrors = {};
-    form.items?.forEach((it, i) => {
-      const err: { nameEn?: boolean; nameMn?: boolean } = {};
-      if (!it.name?.en?.trim()) err.nameEn = true;
-      if (!it.name?.mn?.trim()) err.nameMn = true;
-      if (Object.keys(err).length) newItemErrors[i] = err;
-    });
 
     setErrors(newErrors);
     setItemErrors(newItemErrors);
@@ -150,15 +142,9 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
                   <Input
                     {...register(`title.${lang}`)}
                     onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                    className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                    className="mt-1"
                     placeholder="Гарчиг оруулах"
                   />
-                  {errors.titleEn && (
-                    <p className="text-red-500 text-xs mt-1">Англи гарчиг шаардлагатай</p>
-                  )}
-                  {errors.titleMn && (
-                    <p className="text-red-500 text-xs mt-1">Монгол гарчиг шаардлагатай</p>
-                  )}
                 </div>
 
                 <div>
@@ -248,19 +234,9 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
                           onChange={e =>
                             handleFieldChange(`items.${index}.name.${lang}`, e.target.value)
                           }
-                          className={cn(
-                            'mt-1',
-                            itemErrors[index]?.nameEn && lang === 'en' && 'border-red-500',
-                            itemErrors[index]?.nameMn && lang === 'mn' && 'border-red-500'
-                          )}
+                          className="mt-1"
                           placeholder={lang === 'en' ? 'Product name (EN)' : 'Барааны нэр (MN)'}
                         />
-                        {itemErrors[index]?.nameEn && lang === 'en' && (
-                          <p className="text-xs text-red-500 mt-1">Англи нэр шаардлагатай</p>
-                        )}
-                        {itemErrors[index]?.nameMn && lang === 'mn' && (
-                          <p className="text-xs text-red-500 mt-1">Монгол нэр шаардлагатай</p>
-                        )}
                       </div>
 
                       {/* Model */}

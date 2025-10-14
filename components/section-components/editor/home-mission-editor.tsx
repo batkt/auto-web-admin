@@ -107,21 +107,13 @@ const HomeMissionEditor = ({ data, onDataChange, sectionId }: HomeStatsEditorPro
   const onSubmit = async (values: HomeStatsFormData) => {
     // ---- Validate
     const newErrors: typeof errors = {};
-    if (!values.stats.en?.trim()) newErrors.statsEn = true;
-    if (!values.stats.mn?.trim()) newErrors.statsMn = true;
-    if (!values.title.en?.trim()) newErrors.titleEn = true;
-    if (!values.title.mn?.trim()) newErrors.titleMn = true;
-    if (!values.description.en?.trim()) newErrors.descEn = true;
-    if (!values.description.mn?.trim()) newErrors.descMn = true;
 
     const itemErrs = values.items.map(it => {
       const ie: { stat?: boolean; descEn?: boolean; descMn?: boolean } = {};
       if (!`${it.stat ?? ''}`.trim()) ie.stat = true;
-      if (!it.desc?.en?.trim()) ie.descEn = true;
-      if (!it.desc?.mn?.trim()) ie.descMn = true;
       return ie;
     });
-    if (itemErrs.some(ie => ie.stat || ie.descEn || ie.descMn)) newErrors.items = itemErrs;
+    if (itemErrs.some(ie => ie.stat)) newErrors.items = itemErrs;
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) {
@@ -203,15 +195,9 @@ const HomeMissionEditor = ({ data, onDataChange, sectionId }: HomeStatsEditorPro
                   id="stats"
                   {...register(`stats.${lang}`)}
                   onChange={e => handleFieldChange(`stats.${lang}`, e.target.value)}
-                  className={cn('mt-1', errors.statsEn || errors.statsMn ? 'border-red-500' : '')}
+                  className="mt-1"
                   placeholder="e.g. Let us show you some stats"
                 />
-                {errors.statsEn && (
-                  <p className="text-red-500 text-xs mt-1">EN талбар шаардлагатай</p>
-                )}
-                {errors.statsMn && (
-                  <p className="text-red-500 text-xs mt-1">MN талбар шаардлагатай</p>
-                )}
               </div>
 
               <div className="space-y-2">
@@ -222,15 +208,9 @@ const HomeMissionEditor = ({ data, onDataChange, sectionId }: HomeStatsEditorPro
                   id="title"
                   {...register(`title.${lang}`)}
                   onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                  className={cn('mt-1', errors.titleEn || errors.titleMn ? 'border-red-500' : '')}
+                  className="mt-1"
                   placeholder="e.g. Check our numbers over the past few years."
                 />
-                {errors.titleEn && (
-                  <p className="text-red-500 text-xs mt-1">EN талбар шаардлагатай</p>
-                )}
-                {errors.titleMn && (
-                  <p className="text-red-500 text-xs mt-1">MN талбар шаардлагатай</p>
-                )}
               </div>
 
               <div className="space-y-2">
@@ -242,15 +222,9 @@ const HomeMissionEditor = ({ data, onDataChange, sectionId }: HomeStatsEditorPro
                   rows={3}
                   {...register(`description.${lang}`)}
                   onChange={e => handleFieldChange(`description.${lang}`, e.target.value)}
-                  className={cn('mt-1', errors.descEn || errors.descMn ? 'border-red-500' : '')}
+                  className="mt-1"
                   placeholder="There are many variations of passages..."
                 />
-                {errors.descEn && (
-                  <p className="text-red-500 text-xs mt-1">EN талбар шаардлагатай</p>
-                )}
-                {errors.descMn && (
-                  <p className="text-red-500 text-xs mt-1">MN талбар шаардлагатай</p>
-                )}
               </div>
             </div>
 
@@ -285,12 +259,7 @@ const HomeMissionEditor = ({ data, onDataChange, sectionId }: HomeStatsEditorPro
                     <Input
                       value={item.desc?.[lang] ?? ''}
                       onChange={e => handleFieldChange(`items.${idx}.desc.${lang}`, e.target.value)}
-                      className={cn(
-                        'mt-1',
-                        errors.items?.[idx]?.[lang === 'en' ? 'descEn' : 'descMn']
-                          ? 'border-red-500'
-                          : ''
-                      )}
+                      className="mt-1"
                       placeholder={
                         idx === 0
                           ? 'Product Delivered'
@@ -299,9 +268,6 @@ const HomeMissionEditor = ({ data, onDataChange, sectionId }: HomeStatsEditorPro
                           : 'Product Delivered'
                       }
                     />
-                    {errors.items?.[idx]?.[lang === 'en' ? 'descEn' : 'descMn'] && (
-                      <p className="text-red-500 text-xs mt-1">Тайлбар ({lang}) шаардлагатай</p>
-                    )}
                   </div>
                 </div>
               ))}
