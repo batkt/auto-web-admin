@@ -15,12 +15,17 @@ import 'swiper/css';
 
 type Device = 'desktop' | 'mobile';
 type Localized = Record<string, string>;
-type Item = { productImage: string; name: Localized };
+type Item = {
+  productImage: string;
+  name: Localized;
+  title?: Localized;
+  secondaryTitle?: Localized;
+};
 
 interface ProductSectionData {
   backgroundImage?: string;
-  title?: Localized;
-  secondaryTitle?: Localized;
+  buttonText?: Localized;
+  buttonUrl?: string;
   items?: Item[];
 }
 
@@ -47,10 +52,7 @@ export default function ProductSection({ data, lang, device }: Props) {
   const isMobile = !isDesktop;
 
   // items тогтворжуулах
-  const items: Item[] = useMemo(
-    () => (Array.isArray(data?.items) ? data!.items! : []),
-    [data?.items]
-  );
+  const items: Item[] = useMemo(() => (Array.isArray(data?.items) ? data!.items! : []), [data]);
   const total = items.length;
 
   // хангалттай олон үед л loop асаана; эсрэг үед rewind
@@ -115,7 +117,7 @@ export default function ProductSection({ data, lang, device }: Props) {
             isDesktop ? 'mt-10 text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl'
           )}
         >
-          {t(data?.title)}
+          {t(activeItem?.title)}
         </h2>
         <h3
           className={cn(
@@ -123,7 +125,7 @@ export default function ProductSection({ data, lang, device }: Props) {
             isDesktop ? 'text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl'
           )}
         >
-          {t(data?.secondaryTitle)}
+          {t(activeItem?.secondaryTitle)}
         </h3>
 
         {/* Slider */}
@@ -217,9 +219,19 @@ export default function ProductSection({ data, lang, device }: Props) {
                 <button
                   type="button"
                   className="mt-4 rounded-full bg-[#E84747] px-6 py-3 text-white font-semibold hover:brightness-110 active:brightness-95 focus:outline-none focus:ring-2 focus:ring-white/60"
-                  aria-label="View product detail"
+                  aria-label={t(data?.buttonText) || 'View product detail'}
+                  onClick={() => {
+                    const url = data?.buttonUrl;
+                    if (url) {
+                      if (url.startsWith('http') || url.startsWith('//')) {
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      } else {
+                        window.location.href = url;
+                      }
+                    }
+                  }}
                 >
-                  View Detail
+                  {data?.buttonText?.[lang]}
                 </button>
               </div>
             )}

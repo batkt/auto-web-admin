@@ -19,6 +19,8 @@ type TranslatedText = { en: string; mn: string };
 
 type ProductItem = {
   productImage: string;
+  title: TranslatedText;
+  secondaryTitle: TranslatedText;
   name: TranslatedText;
   model: string;
   description: TranslatedText;
@@ -26,10 +28,9 @@ type ProductItem = {
 };
 
 type HomeQuoteFormData = {
-  title: TranslatedText;
-  secondaryTitle: TranslatedText;
   description: TranslatedText;
   backgroundImage: string;
+  buttonText: TranslatedText;
   items: ProductItem[];
 };
 
@@ -78,6 +79,8 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
   const addProduct = () => {
     append({
       productImage: '',
+      title: { en: '', mn: '' },
+      secondaryTitle: { en: '', mn: '' },
       name: { en: '', mn: '' },
       model: '',
       description: { en: '', mn: '' },
@@ -137,28 +140,6 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
           <div className="p-6 space-y-8">
             <div className="space-y-4">
               <div className="space-y-3">
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">Гарчиг</Label>
-                  <Input
-                    {...register(`title.${lang}`)}
-                    onChange={e => handleFieldChange(`title.${lang}`, e.target.value)}
-                    className="mt-1"
-                    placeholder="Гарчиг оруулах"
-                  />
-                </div>
-
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">2-р Гарчиг</Label>
-                  <Input
-                    {...register(`secondaryTitle.${lang}`)}
-                    onChange={e => handleFieldChange(`secondaryTitle.${lang}`, e.target.value)}
-                    className="mt-1"
-                    placeholder="Хоёрдогч гарчиг"
-                  />
-                </div>
-
-                <Separator />
-
                 <div className="space-y-4">
                   <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
                     Арын зураг
@@ -173,6 +154,28 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
                     acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
                   />
                   <p className="text-xs text-gray-500">Нүүрэн дээр харагдах арын зураг.</p>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Button Settings */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                Товчны тохиргоо
+              </h3>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-gray-700">
+                    Товчны текст ({lang.toUpperCase()})
+                  </Label>
+                  <Input
+                    {...register(`buttonText.${lang}`)}
+                    onChange={e => handleFieldChange(`buttonText.${lang}`, e.target.value)}
+                    className="mt-1"
+                    placeholder={lang === 'en' ? 'Button text (EN)' : 'Товчны текст (MN)'}
+                  />
                 </div>
               </div>
             </div>
@@ -222,6 +225,41 @@ const HomeQuoteEditor = ({ data, onDataChange, sectionId }: HomeQuoteEditorProps
                         <p className="text-[11px] text-gray-500">
                           PNG/WebP зөвлөмжтэй (ил тод фон боломжтой).
                         </p>
+                      </div>
+
+                      {/* Title (i18n) */}
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-gray-700">
+                          Гарчиг ({lang.toUpperCase()})
+                        </Label>
+                        <Input
+                          {...register(`items.${index}.title.${lang}`)}
+                          onChange={e =>
+                            handleFieldChange(`items.${index}.title.${lang}`, e.target.value)
+                          }
+                          className="mt-1"
+                          placeholder={lang === 'en' ? 'Product title (EN)' : 'Барааны гарчиг (MN)'}
+                        />
+                      </div>
+
+                      {/* Secondary Title (i18n) */}
+                      <div className="space-y-2">
+                        <Label className="text-sm font-medium text-gray-700">
+                          2-р Гарчиг ({lang.toUpperCase()})
+                        </Label>
+                        <Input
+                          {...register(`items.${index}.secondaryTitle.${lang}`)}
+                          onChange={e =>
+                            handleFieldChange(
+                              `items.${index}.secondaryTitle.${lang}`,
+                              e.target.value
+                            )
+                          }
+                          className="mt-1"
+                          placeholder={
+                            lang === 'en' ? 'Secondary title (EN)' : 'Хоёрдогч гарчиг (MN)'
+                          }
+                        />
                       </div>
 
                       {/* Name (i18n) */}
