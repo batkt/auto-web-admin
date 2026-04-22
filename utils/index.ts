@@ -41,8 +41,10 @@ export const getEmbedUrl = (raw: string): string | null => {
   const url = raw?.trim();
   if (!url) return null;
 
+  const withProtocol = /^https?:\/\//i.test(url) ? url : `https://${url}`;
+
   try {
-    const u = new URL(url);
+    const u = new URL(withProtocol);
     const host = u.hostname.replace(/^www\./, '');
 
     if (host === 'youtu.be') {

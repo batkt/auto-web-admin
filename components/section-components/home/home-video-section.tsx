@@ -1,11 +1,10 @@
 'use client';
 
 import React from 'react';
-import { cn } from '@/lib/utils';
 import { getEmbedUrl } from '@/utils';
 
 const HomeVideoSection = ({
-  device,
+  device: _device,
   data,
   lang,
 }: {
@@ -14,56 +13,43 @@ const HomeVideoSection = ({
     title?: { en?: string; mn?: string };
     description?: { en?: string; mn?: string };
     videoUrl?: string;
+    youtubeUrl?: string;
   };
   lang: string;
 }) => {
-  const embed = data?.videoUrl ? getEmbedUrl(String(data.videoUrl)) : null;
+  const raw =
+    (data?.videoUrl && String(data.videoUrl)) ||
+    (data?.youtubeUrl && String(data.youtubeUrl)) ||
+    '';
+  const embed = raw ? getEmbedUrl(raw) : null;
 
   return (
     <section
       id="video"
-      className="relative w-full overflow-hidden bg-[#111] py-16 md:py-24"
+      className="relative w-full min-w-0 self-stretch overflow-hidden bg-[#111] py-16 md:py-24"
     >
-      <div
-        className={cn(
-          'relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-10',
-          device === 'mobile' && 'text-center'
-        )}
-      >
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-4 text-center sm:px-6 lg:px-10">
         {data?.title?.[lang] ? (
-          <h2
-            className={cn(
-              'font-extrabold text-white font-title',
-              device === 'desktop' ? 'text-4xl md:text-5xl text-left' : 'text-3xl'
-            )}
-          >
+          <h2 className="text-3xl font-extrabold text-white font-title md:text-5xl">
             {data.title[lang]}
           </h2>
         ) : null}
 
         {data?.description?.[lang] ? (
-          <p
-            className={cn(
-              'mt-4 text-white/85 font-description max-w-3xl',
-              device === 'desktop' ? 'text-lg text-left' : 'text-base mx-auto'
-            )}
-          >
+          <p className="mt-4 max-w-3xl text-base text-white/85 font-description md:text-lg">
             {data.description[lang]}
           </p>
         ) : null}
 
         {embed ? (
-          <div
-            className={cn(
-              'mt-10 w-full max-w-4xl',
-              device === 'mobile' && 'mx-auto'
-            )}
-          >
+          <div className="mt-10 w-full max-w-4xl">
             <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black/40 ring-1 ring-white/10">
               <iframe
                 src={embed}
                 title="Video"
-                className="absolute inset-0 h-full w-full"
+                width={1280}
+                height={720}
+                className="absolute inset-0 h-full w-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 loading="lazy"
