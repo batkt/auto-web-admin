@@ -7,8 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { ImageUpload } from '@/components/ui/image-upload';
 import { updateSectionData } from '@/lib/actions/section';
+import { uploadFile } from '@/lib/actions/file';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import LanguageTabs from '../language-tabs';
 
 type TranslatedText = {
@@ -20,6 +23,7 @@ export type HomeVideoFormData = {
   title: TranslatedText;
   description: TranslatedText;
   videoUrl: string;
+  backgroundImage: string;
 };
 
 interface HomeVideoEditorProps {
@@ -33,6 +37,7 @@ const HomeVideoEditor = ({ data, onDataChange, sectionId }: HomeVideoEditorProps
     defaultValues: {
       ...data,
       videoUrl: data.videoUrl ?? '',
+      backgroundImage: data.backgroundImage ?? '',
     },
     mode: 'onChange',
   });
@@ -60,6 +65,7 @@ const HomeVideoEditor = ({ data, onDataChange, sectionId }: HomeVideoEditorProps
       const payload = {
         ...values,
         videoUrl: (values.videoUrl ?? '').trim(),
+        backgroundImage: (values.backgroundImage ?? '').trim(),
       };
       const response = await updateSectionData(sectionId, payload);
       if (response.code === 200) {
@@ -76,6 +82,19 @@ const HomeVideoEditor = ({ data, onDataChange, sectionId }: HomeVideoEditorProps
       setIsSaving(false);
     }
   };
+
+  const handleImageUpload = async (file: File): Promise<string> => {
+    try {
+      const uploaded = await uploadFile(file);
+      return uploaded.url;
+    } catch (err) {
+      console.error(err);
+      toast.error('Зураг оруулахад алдаа гарлаа');
+      throw err;
+    }
+  };
+
+  const watchedValues = watch();
 
   return (
     <div className="h-full flex flex-col">
@@ -110,6 +129,29 @@ const HomeVideoEditor = ({ data, onDataChange, sectionId }: HomeVideoEditorProps
                 onChange={e => handleFieldChange(`description.${lang}`, e.target.value)}
                 className="mt-1"
                 placeholder="Тайлбар"
+              />
+            </div>
+
+            <Separator />
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">Background зураг</Label>
+              <p className="text-xs text-muted-foreground">
+                Хоосон бол хар суурь (#111). Бусад хэсгүүдтэй ижил /uploads эсвэл гадаад URL.
+              </p>
+              <ImageUpload
+                mode="single"
+                value={watchedValues.backgroundImage}
+                onChange={val =>
+                  handleFieldChange(
+                    'backgroundImage',
+                    Array.isArray(val) ? val[0] ?? '' : val
+                  )
+                }
+                onUpload={handleImageUpload}
+                maxSize={5}
+                acceptedTypes={['image/jpeg', 'image/png', 'image/webp']}
+                className={cn('mt-1')}
               />
             </div>
 

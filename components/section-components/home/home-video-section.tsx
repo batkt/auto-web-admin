@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { getEmbedUrl } from '@/utils';
+import Image from 'next/image';
+import { getEmbedUrl, getImageUrl } from '@/utils';
 
 const HomeVideoSection = ({
   device: _device,
@@ -14,6 +15,7 @@ const HomeVideoSection = ({
     description?: { en?: string; mn?: string };
     videoUrl?: string;
     youtubeUrl?: string;
+    backgroundImage?: string;
   };
   lang: string;
 }) => {
@@ -22,12 +24,27 @@ const HomeVideoSection = ({
     (data?.youtubeUrl && String(data.youtubeUrl)) ||
     '';
   const embed = raw ? getEmbedUrl(raw) : null;
+  const bgUrl = data?.backgroundImage ? getImageUrl(String(data.backgroundImage)) : '';
 
   return (
     <section
       id="video"
       className="relative w-full min-w-0 self-stretch overflow-hidden bg-[#111] py-16 md:py-24"
     >
+      {bgUrl ? (
+        <>
+          <Image
+            src={bgUrl}
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center pointer-events-none select-none z-0"
+            priority={false}
+          />
+          <div className="absolute inset-0 z-[1] bg-black/60" aria-hidden />
+        </>
+      ) : null}
+
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-4 text-center sm:px-6 lg:px-10">
         {data?.title?.[lang] ? (
           <h2 className="text-3xl font-extrabold text-white font-title md:text-5xl">
