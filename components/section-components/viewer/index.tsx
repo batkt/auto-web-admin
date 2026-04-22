@@ -9,6 +9,7 @@ import HelpSection from '../home/features-section';
 import Ticker from '../home/ticker';
 import QuoteSection from '../home/product-section';
 import BlogSection from '../home/blog-section';
+import HomeVideoSection from '../home/home-video-section';
 
 import { Blog } from '@/lib/types/blog.types';
 import Header from '@/components/header';
@@ -63,6 +64,10 @@ const SectionViewer = ({ section, blogList }: { section: SectionData; blogList: 
         return <AboutSection lang={lang} device={_selectedDevice} data={section.data} />;
       case 'home-contact':
         return <HelpSection lang={lang} device={_selectedDevice} data={section.data} />;
+      case 'home-video':
+        return (
+          <HomeVideoSection lang={lang} device={_selectedDevice} data={section.data} />
+        );
       case 'home-quotes':
         return <Ticker lang={lang} device={_selectedDevice} data={section.data} />;
       case 'home-products':

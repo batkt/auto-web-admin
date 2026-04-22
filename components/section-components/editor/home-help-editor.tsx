@@ -28,6 +28,7 @@ type HelpFormData = {
   phone: string;
   email: string;
   backgroundImage: string;
+  youtubeUrl?: string;
 };
 
 interface HomeHelpEditorProps {
@@ -38,7 +39,10 @@ interface HomeHelpEditorProps {
 
 const HomeHelpEditor = ({ data, onDataChange, sectionId }: HomeHelpEditorProps) => {
   const { register, handleSubmit, watch, setValue } = useForm<HelpFormData>({
-    defaultValues: data,
+    defaultValues: {
+      ...data,
+      youtubeUrl: data.youtubeUrl ?? '',
+    },
     mode: 'onChange',
   });
 
@@ -256,6 +260,26 @@ const HomeHelpEditor = ({ data, onDataChange, sectionId }: HomeHelpEditorProps) 
                   )}
                 </div>
               </div>
+            </div>
+
+            <Separator />
+
+            {/* YouTube */}
+            <div className="space-y-3">
+              <Label htmlFor="youtubeUrl" className="text-sm font-medium text-gray-700">
+                YouTube видео холбоос
+              </Label>
+              <Input
+                id="youtubeUrl"
+                type="url"
+                placeholder="https://www.youtube.com/watch?v=... эсвэл https://youtu.be/..."
+                {...register('youtubeUrl')}
+                onChange={e => handleFieldChange('youtubeUrl', e.target.value)}
+                className="mt-1"
+              />
+              <p className="text-xs text-muted-foreground">
+                Зөвхөн YouTube (watch, youtu.be, shorts, embed). Хоосон бол видео харуулахгүй.
+              </p>
             </div>
 
             <Separator />

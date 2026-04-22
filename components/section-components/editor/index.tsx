@@ -4,6 +4,7 @@ import HomeHeroEditor from './home-hero-editor';
 import HomeMissionEditor from './home-mission-editor';
 import EditorLayout from './editor-layout';
 import HomeHelpEditor from './home-help-editor';
+import HomeVideoEditor from './home-video-editor';
 import HomeGalleryEditor from './home-gallery-editor';
 import HomeQuoteEditor from './home-quote-editor';
 import HomeBlogEditor from './home-blog-editor';
@@ -69,6 +70,15 @@ const SectionEditor = ({ section, onDataChange, preview }: SectionEditorProps) =
           />
         );
       // return <AboutSection lang={lang} device={_selectedDevice} data={section.data} />
+
+      case 'home-video':
+        return (
+          <HomeVideoEditor
+            data={section.data as any}
+            onDataChange={onDataChange}
+            sectionId={section._id}
+          />
+        );
 
       case 'home-quotes':
         return (

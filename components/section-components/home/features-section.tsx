@@ -17,7 +17,7 @@ import {
   FaPinterestP,
   FaGooglePlusG,
 } from 'react-icons/fa';
-import { getClientImageUrl, getImageUrl } from '@/utils';
+import { getClientImageUrl, getEmbedUrl, getImageUrl } from '@/utils';
 import { saveMessage, ContactFormData } from '@/lib/actions/message';
 
 const underlineBase =
@@ -38,6 +38,8 @@ const FeaturesSection = ({
     formState: { errors, isSubmitting },
     reset,
   } = useForm<ContactFormData>();
+
+  const youtubeEmbed = data?.youtubeUrl ? getEmbedUrl(String(data.youtubeUrl)) : null;
 
   return (
     <section
@@ -68,6 +70,27 @@ const FeaturesSection = ({
             {data?.secondaryTitle?.[lang]}
           </p>
         </div>
+
+        {youtubeEmbed ? (
+          <div
+            className={cn(
+              'mb-12 w-full max-w-4xl',
+              device === 'desktop' ? '' : 'mx-auto'
+            )}
+          >
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black/40 ring-1 ring-white/10">
+              <iframe
+                src={youtubeEmbed}
+                title="YouTube"
+                className="absolute inset-0 h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            </div>
+          </div>
+        ) : null}
 
         <div
           className={cn(

@@ -37,6 +37,42 @@ export const getClientImageUrl = (image: string) => {
   return image;
 };
 
+export const getEmbedUrl = (raw: string): string | null => {
+  const url = raw?.trim();
+  if (!url) return null;
+
+  try {
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./, '');
+
+    if (host === 'youtu.be') {
+      const id = u.pathname.split('/').filter(Boolean)[0]?.split('?')[0];
+      return id ? `https://www.youtube.com/embed/${id}` : null;
+    }
+
+    if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'music.youtube.com') {
+      const v = u.searchParams.get('v');
+      if (v) {
+        const id = v.split('/')[0];
+        return id ? `https://www.youtube.com/embed/${id}` : null;
+      }
+
+      const parts = u.pathname.split('/').filter(Boolean);
+      const special = parts.findIndex((p) => ['embed', 'shorts', 'live'].includes(p));
+      if (special !== -1 && parts[special + 1]) {
+        const id = parts[special + 1].split('?')[0];
+        return id ? `https://www.youtube.com/embed/${id}` : null;
+      }
+    }
+  } catch {
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+      return `https://www.youtube.com/embed/${url}`;
+    }
+  }
+
+  return null;
+};
+
 export const queryStringBuilder = (params: Record<string, string>) => {
   const queryString = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
